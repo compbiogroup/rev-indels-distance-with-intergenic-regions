@@ -1363,6 +1363,8 @@ class Intergenic_Rev :
                             partial_black = partial_black + v_j.wp[0]
         return None
 
+    # Lemma 9 of the preliminary version (paper presented at AlCoB 2021: Reversal Distance on Genomes with Different Gene Content and Intergenic Regions Information) 
+    # This Lemma was replaced by two other lemmas in the final manuscript published at IEEE/ACM Transactions on Computational Biology and Bioinformatics
     def lemma_9(self, graph) :
         _, vertices = graph.get_cycles(want_vertices = True)
         for cycle in vertices :
@@ -1403,6 +1405,7 @@ class Intergenic_Rev :
 
     ## This lemma searches for an oriented convergent cycle, and will transform
     ## it into a divergent cycle
+    ## This was changed to Lemma 9 in the final version of the paper
     def lemma_10(self, graph) :
         _, vertices = graph.get_cycles(want_vertices = True)
         for cycle in vertices :
@@ -1419,6 +1422,7 @@ class Intergenic_Rev :
         return None        
 
     ## last step: there are only non-oriented convergent cycles
+    ## This was changed to Lemma 10 in  the final version of the paper
     def lemma_11(self, graph) :
         _, vertices = graph.get_cycles(want_vertices = True)
         for cycle in vertices :
@@ -1653,10 +1657,10 @@ def construct_str_cycle(input_string, input_gray, input_black) :
 ##     (i) a comma-separated list with integer numbers. The number 0 is considered 
 ##          an alpha that an indel will remove. Any other number must be unique, 
 ##          disregarding their signs.
-##    (ii) a comma-separated list of non-negative integers, it represents intergenic
-##          sizes of the target genome
-##   (iii) a comma-separated list of non-negative integers with one more element
+##    (ii) a comma-separated list of non-negative integers with one more element
 ##          than list in (i), it represents intergenic sizes of the input genome
+##   (iii) a comma-separated list of non-negative integers, it represents intergenic
+##          sizes of the target genome
 
 if __name__ == '__main__':
     seconds = time.time()
@@ -1664,11 +1668,14 @@ if __name__ == '__main__':
     wblack = eval("[%s]" % sys.argv[2])
     wgray  = eval("[%s]" % sys.argv[3])
 
+    # Use is_3approx for the algorithm published at AlCoB'2021 (preliminary version of the paper): Reversal Distance on Genomes with Different Gene Content and Intergenic Regions Information
+    # The default version is the 2.5-approximation published at IEEE/ACM Transactions on Computational Biology and Bioinformatics
     if len(sys.argv) == 5 :
         is_3approx = sys.argv[4] == '3'
     else :
-        is_3approx = True
+        is_3approx = False
 
+    # print("is_3approx", is_3approx)
     final_length = len(wgray)
 
     config, grayw, blackw = construct_str_cycle(permutation, wgray, wblack)
